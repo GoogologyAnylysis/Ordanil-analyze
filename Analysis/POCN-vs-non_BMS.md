@@ -1,1 +1,0 @@
-![POCN-vs-non_BMS.1](POCN-vs-non_BMS.1.md)
