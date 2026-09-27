@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Branch Gate · GitHub 命名空间授权</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --panel: #161b22;
+    --panel-2: #1c2128;
+    --border: #30363d;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --accent: #2f81f7;
+    --ok: #3fb950;
+    --warn: #d29922;
+    --err: #f85149;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: radial-gradient(1200px 600px at 50% -10%, #1f2d3d 0%, var(--bg) 60%);
+    color: var(--text);
+    font: 15px/1.6 -apple-system, "Segoe UI", "Microsoft YaHei", system-ui, sans-serif;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px 80px;
+  }
+  .wrap { width: 100%; max-width: 760px; }
+  header { text-align: center; margin-bottom: 28px; }
+  header h1 { margin: 0 0 8px; font-size: 26px; letter-spacing: .5px; }
+  header p { margin: 0; color: var(--muted); font-size: 14px; }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 16px;
+  }
+  .card h2 {
+    margin: 0 0 16px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .8px;
+  }
+  .hidden { display: none !important; }
+
+  button {
+    font: inherit;
+    font-weight: 600;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 18px;
+    background: var(--panel-2);
+    color: var(--text);
+    cursor: pointer;
+    transition: .15s;
+  }
+  button:hover:not(:disabled) { border-color: #58a6ff; background: #21262d; }
+  button:disabled { opacity: .5; cursor: not-allowed; }
+  button.primary { background: var(--ok); border-color: #2ea043; color: #04260f; }
+  button.primary:hover:not(:disabled) { background: #46c95c; }
+  button.ghost { background: transparent; }
+  button.block { width: 100%; }
+
+  .row { display: flex; gap: 10px; align-items: center; }
+
+  input[type=text] {
+    width: 100%;
+    font: inherit;
+    background: var(--bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    outline: none;
+  }
+  input[type=text]:focus { border-color: var(--accent); }
+  label { display: block; font-size: 13px; color: var(--muted); margin: 0 0 6px; }
+
+  .user { display: flex; gap: 14px; align-items: center; }
+  .user img { width: 52px; height: 52px; border-radius: 50%; border: 1px solid var(--border); }
+  .user .name { font-weight: 600; font-size: 16px; }
+  .user .sub { color: var(--muted); font-size: 13px; }
+
+  .kv { display: flex; justify-content: space-between; gap: 16px; padding: 9px 0; border-bottom: 1px dashed var(--border); font-size: 14px; }
+  .kv:last-child { border-bottom: none; }
+  .kv .k { color: var(--muted); }
+  .kv .v { font-family: ui-monospace, Consolas, monospace; text-align: right; word-break: break-all; }
+  .kv .v.big { font-size: 16px; font-weight: 700; color: var(--accent); }
+
+  .badge { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+  .badge.ok { background: rgba(63,185,80,.15); color: var(--ok); border: 1px solid rgba(63,185,80,.4); }
+  .badge.no { background: rgba(139,148,158,.15); color: var(--muted); border: 1px solid var(--border); }
+
+  .log { margin-top: 14px; font-size: 13px; font-family: ui-monospace, Consolas, monospace; }
+  .log div { padding: 9px 12px; border-radius: 8px; margin-bottom: 8px; border: 1px solid; }
+  .log .ok { background: rgba(63,185,80,.1); border-color: rgba(63,185,80,.4); color: #7ee787; }
+  .log .err { background: rgba(248,81,73,.1); border-color: rgba(248,81,73,.4); color: #ffa198; }
+
+  .hint { color: var(--muted); font-size: 13px; margin-top: 10px; }
+  .split { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
+
+  pre.cmd {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-family: ui-monospace, Consolas, monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    overflow-x: auto;
+    margin: 0;
+    white-space: pre;
+  }
+  .cmd-label { font-size: 12px; color: var(--muted); margin: 14px 0 6px; }
+  .cmd-label:first-of-type { margin-top: 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Branch Gate</h1>
+    <p>用 GitHub 真实 ID 认人，一人一个命名空间，只有你能推送到自己的分支</p>
+  </header>
+
+  <!-- 未登录 -->
+  <section id="view-anon" class="card hidden">
+    <h2>第一步 · 授权</h2>
+    <p style="margin-top:0;color:var(--muted)">
+      授权后我们会读取你的 GitHub 数字 ID（不可变，改名也不会变），并据此分配唯一命名空间。之后你就可以用正常的 git 命令 push / pull / 提 PR。
+    </p>
+    <button class="primary block" id="btn-login">使用 GitHub 登录</button>
+  </section>
+
+  <!-- 已登录 -->
+  <section id="view-user" class="hidden">
+    <div class="card">
+      <h2>身份</h2>
+      <div class="user">
+        <img id="u-avatar" alt="" />
+        <div>
+          <div class="name" id="u-name"></div>
+          <div class="sub" id="u-login"></div>
+        </div>
+      </div>
+      <hr class="split" />
+      <div class="kv"><span class="k">真实 ID（GitHub 数字 ID）</span><span class="v big" id="u-id"></span></div>
+      <div class="kv"><span class="k">App 安装授权</span><span class="v" id="u-install"></span></div>
+      <div class="kv"><span class="k">目标仓库</span><span class="v" id="u-repo"></span></div>
+      <div class="kv"><span class="k">我的命名空间</span><span class="v" id="u-ns"></span></div>
+      <div class="kv"><span class="k">分支保护规则</span><span class="v" id="u-prot"></span></div>
+      <hr class="split" />
+      <button class="ghost" id="btn-logout">退出登录</button>
+    </div>
+
+    <!-- 注册 -->
+    <div class="card" id="card-register">
+      <h2>第二步 · 领取命名空间</h2>
+      <label for="i-ns">命名空间（默认取你的 GitHub 用户名）</label>
+      <div class="row">
+        <input type="text" id="i-ns" placeholder="例如 cheng" />
+        <button class="primary" id="btn-register" style="white-space:nowrap">注册</button>
+      </div>
+      <div class="hint">
+        命名空间全仓库唯一。注册后会自动把你加为协作者，并创建分支保护规则——只有你能推送到 <code>{namespace}</code>、<code>{namespace}/*</code> 下的分支，其他人推不动。
+      </div>
+    </div>
+
+    <!-- 已注册：显示 git 命令 -->
+    <div class="card hidden" id="card-git">
+      <h2>第三步 · 开始推送</h2>
+      <p style="margin-top:0;color:var(--muted)">
+        你已获得仓库的 push 权限。用下面的命令正常克隆、建分支、推送即可。注意：只能推送到你的命名空间 <code id="ns-tag"></code> 下。
+      </p>
+
+      <div class="cmd-label">克隆仓库</div>
+      <pre class="cmd" id="cmd-clone"></pre>
+
+      <div class="cmd-label">进入目录并创建你的工作分支</div>
+      <pre class="cmd" id="cmd-branch"></pre>
+
+      <div class="cmd-label">提交并推送（只能推到你的命名空间下）</div>
+      <pre class="cmd" id="cmd-push"></pre>
+
+      <div class="cmd-label">提 PR 到主分支</div>
+      <pre class="cmd" id="cmd-pr"></pre>
+
+      <div class="hint">
+        分支保护规则会拦截所有推送到你命名空间之外的尝试。想试新功能就建 <code>{namespace}/xxx</code> 子分支，完全不影响别人。
+      </div>
+    </div>
+
+    <div class="log" id="log"></div>
+  </section>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+let state = null;
+
+function log(kind, text) {
+  const el = document.createElement('div');
+  el.className = kind;
+  el.textContent = text;
+  $('log').prepend(el);
+}
+
+async function api(path, options = {}) {
+  const res = await fetch(path, {
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    ...options,
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || `请求失败 (${res.status})`);
+  return data;
+}
+
+function render() {
+  const s = state;
+  const anon = !s || !s.loggedIn;
+  $('view-anon').classList.toggle('hidden', !anon);
+  $('view-user').classList.toggle('hidden', anon);
+  if (anon) return;
+
+  const u = s.user;
+  $('u-avatar').src = u.avatarUrl || '';
+  $('u-avatar').alt = u.login;
+  $('u-name').textContent = u.name || u.login;
+  $('u-login').textContent = '@' + u.login;
+  $('u-id').textContent = String(u.githubId);
+  $('u-install').innerHTML = u.appInstalled
+    ? '<span class="badge ok">已授权</span>'
+    : '<span class="badge no">未授权</span>';
+  $('u-repo').textContent = `${s.repo.owner}/${s.repo.name} · 基准 ${s.repo.baseBranch}`;
+
+  if (s.namespace) {
+    const ns = s.namespace.name;
+    const repo = `${s.repo.owner}/${s.repo.name}`;
+    $('u-ns').textContent = ns;
+    $('u-prot').innerHTML = s.namespace.protected
+      ? '<span class="badge ok">已启用</span>'
+      : '<span class="badge no">未启用</span>';
+    $('card-register').classList.add('hidden');
+    $('card-git').classList.remove('hidden');
+    $('ns-tag').textContent = ns;
+    $('cmd-clone').textContent = `git clone https://github.com/${repo}.git`;
+    $('cmd-branch').textContent = `cd ${s.repo.name}\ngit checkout -b ${ns}/my-feature`;
+    $('cmd-push').textContent = `git add .\ngit commit -m "my change"\ngit push origin ${ns}/my-feature`;
+    $('cmd-pr').textContent = `# 在 GitHub 网页上把 ${ns}/my-feature 提 PR 到 ${s.repo.baseBranch}`;
+  } else {
+    $('u-ns').textContent = '尚未注册';
+    $('u-prot').innerHTML = '<span class="badge no">—</span>';
+    $('card-register').classList.remove('hidden');
+    $('card-git').classList.add('hidden');
+    if (!$('i-ns').value) $('i-ns').value = u.login;
+  }
+}
+
+async function refresh() {
+  state = await api('/api/me');
+  render();
+}
+
+async function busy(btn, fn) {
+  const text = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = '处理中…';
+  try {
+    await fn();
+  } catch (e) {
+    log('err', e.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = text;
+  }
+}
+
+$('btn-login').onclick = () => { location.href = '/api/auth/login'; };
+
+$('btn-logout').onclick = () => busy($('btn-logout'), async () => {
+  await api('/api/auth/logout', { method: 'POST' });
+  $('log').innerHTML = '';
+  await refresh();
+});
+
+$('btn-register').onclick = () => busy($('btn-register'), async () => {
+  const namespace = $('i-ns').value.trim();
+  const r = await api('/api/register', {
+    method: 'POST',
+    body: JSON.stringify({ namespace }),
+  });
+  log('ok', r.message + (r.namespace.protected ? '（分支保护规则已启用）' : '（分支保护规则未启用，请检查仓库是否为公开组织仓库）'));
+  await refresh();
+});
+
+refresh().catch((e) => log('err', e.message));
+</script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+# 监测每次 push：只有「创建 / 删除分支」的推送才调用 branch-gate Worker 重新同步权限。
+# 纯文件提交会跳过 job，不消耗 Actions 分钟数。
+# 需要在仓库 Secrets 里配置：BRANCH_GATE_URL、BRANCH_GATE_RESYNC_SECRET
+name: branch-watch
+
+on:
+  push:
+    branches: ['**']
+  workflow_dispatch: {}
+
+# 本工作流不需要 GITHUB_TOKEN 的任何权限
+permissions: {}
+
+jobs:
+  resync:
+    runs-on: ubuntu-latest
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.created == true ||
+      github.event.deleted == true
+    steps:
+      - name: Notify branch-gate worker
+        run: |
+          curl -sS -f -X POST "$BRANCH_GATE_URL/api/resync" \
+            -H "Authorization: Bearer $BRANCH_GATE_RESYNC_SECRET" \
+            -H "Content-Type: application/json" \
+            --max-time 60
+        env:
+          BRANCH_GATE_URL: ${{ secrets.BRANCH_GATE_URL }}
+          BRANCH_GATE_RESYNC_SECRET: ${{ secrets.BRANCH_GATE_RESYNC_SECRET }}

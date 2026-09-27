@@ -1,0 +1,22 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "branch-gate",
+  "main": "src/index.ts",
+  "compatibility_date": "2024-12-01",
+  // public/ 直接作为静态资源对外提供；只有 /api/* 这类不存在的路径才会进入 Worker
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS"
+  },
+  "observability": {
+    "enabled": true
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "branch_gate",
+      // 本地开发用这个占位即可；部署前执行 `wrangler d1 create branch_gate` 换成真实 id
+      "database_id": "00000000-0000-0000-0000-000000000000"
+    }
+  ]
+}

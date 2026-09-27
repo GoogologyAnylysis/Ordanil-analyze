@@ -1,0 +1,23 @@
+# 复制为 .dev.vars 后填入真实值（.dev.vars 已被 .gitignore 忽略，不要提交）
+# 生产环境用 `wrangler secret put <名称>` 逐个写入
+
+# GitHub App 的 App ID（数字）
+GITHUB_APP_ID=123456
+
+# GitHub App 的 Client ID / Client Secret（用于用户授权登录）
+GITHUB_CLIENT_ID=Iv1_xxxxxxxxxxxxxxxx
+GITHUB_CLIENT_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# GitHub App 的私钥（PKCS#8 PEM）。单行写，换行用 \n 转义
+GITHUB_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQ...\n-----END PRIVATE KEY-----\n"
+
+# 目标仓库（分支会被创建在这里）
+TARGET_REPO_OWNER=your-github-name
+TARGET_REPO_NAME=notations
+
+# 从哪个分支切出新分支
+BASE_BRANCH=main
+
+# Actions 调用 /api/resync 的共享密钥（仓库 Secret BRANCH_GATE_RESYNC_SECRET 必须与此一致）
+# 生成：-join ((1..64) | ForEach-Object { '{0:x}' -f (Get-Random -Max 16) })
+RESYNC_SECRET=change-me-to-a-long-random-hex
