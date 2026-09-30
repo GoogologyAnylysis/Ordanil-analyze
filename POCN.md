@@ -1,36 +1,40 @@
 # POCN(投影)
+
 ## 1. 通用
 
-$$
-\forall\alpha,\beta\in\mathrm{Exp}\Rightarrow \alpha+\beta\in \mathrm{Exp}\\
-\psi_X(0)=B\\
-\psi_X(\alpha+1)=\psi_X(\alpha)*\omega\\
-\psi_X(h(X))=\alpha \rightarrow \psi_Y(h(\alpha))fp.
-\\
-\psi_X(\alpha)=sup\{\psi_X(\alpha_n)\mid \exists{\alpha_n}((\alpha_0=0)\land \forall n((\alpha_{n+1}>\alpha_n)\land(\psi_X(\alpha_{n+1})>\psi_X(\alpha_n))\land(sup{\alpha_n}=\alpha))\ ) \},isProjection(\alpha,X)\\\\
-\forall\alpha\forall\beta(isProjection(\alpha,X)\land isProjection(\beta,X)\to isProjection(\alpha+\beta,X))
-$$
-## 2. n阶投影
+### 1.1 前置
 
-记$n-P$为$n$阶投影的类。
-记$0-P$为$\Pi_0$。
 $$
-\psi_{n-P\,\mathrm{aft}\alpha}(0)=(n-1)-P\,\mathrm{aft}\alpha \\
-isProjection(\alpha,X)\iff X\in n-P\land\exist\beta((\exist m(m<n,\beta\in m-P\cap (m+1)-P\,\mathrm{aft}\,X \land\alpha=h(\beta)))\land(\lnot \exist\gamma(\gamma<X\land f(\psi_\gamma(g(\beta)))=h(\beta))))
+\forall\alpha(\forall f\in REC_f:On\to On,\beta\in\alpha(f(\beta)<\alpha)\to \alpha\in NONR)\\
 $$
+
+### 1.2 表达式
+
+$$
+Zero=0\\
+On\subset Exp\\
+\forall\alpha,One\in Exp(\mathcal{F}(One)=1\to\alpha+One\in \mathbb{Succ})\\
+\forall\alpha,\beta\in Exp(\mathcal{F}(\beta)\in NONR \to \psi_\beta(\alpha)\in Exp )\\
+\forall\alpha,\beta\in Exp(\alpha+\beta\in Exp )\\
+\alpha,\beta\in Exp(\mathcal{F}(\alpha+\beta)=\mathcal{F}(\alpha)+\mathcal{F}(\beta))\\
+\alpha,\beta\in Exp(\mathcal{F}(\beta)\in NONR \to \mathcal{F}(\psi_\beta(\alpha))=\psi_{\mathcal{F}(\beta)}(\mathcal{F}(\alpha)))\\
+$$
+
+### 1.3 PIS
+
+## 2. n 阶投影
+
+记 $n-P$ 为 $n$ 阶投影的类。
+
 ## 3. 向上投影
 
-记 $ S_n=n \mathrm{th} (1,0)-P,\sigma \alpha =\beta \mathrm{th} (\#,\mu @ 1,\nu+1@ 0)-P, \theta \alpha =\beta \mathrm{th} (\#,\mu+1@ 1,\nu @ 0)-P ,\alpha=\beta\mathrm{th} (\#,\mu @ 1,\nu @ 0)-P $
+记
+
 $$
-\psi_{\sigma^b\theta^aS_n}(0)=\begin{cases}
-\sigma^{b-1}\theta^aS_{\sigma^b\theta^aS_{n-1}+1} &n>1\land isSucc(n)\land isSucc(b)\\
-\sigma^{\theta^aS_{n-1}+1}\theta^{a-1}S&n>1\land isSucc(n)\land isSucc(a)\land b=0\\
-\sigma^{b-1}\theta^aS &n=1\land isSucc(n)\land isSucc(b)\\
-\sigma\theta^{a-1}S&n=1\land isSucc(n)\land isSucc(a)\land b=0\\
-S_{n-1}&n>1\land isSucc(n)\land a,b=0\\
-1&n=1 a,b=0
-\end{cases}
+\begin{aligned}
+&S_n=n\,\mathrm{th}\,(1,0)-P,\quad\sigma\alpha=\beta\,\mathrm{th}\,(\#,\mu@1,\nu+1@0)-P,\\
+&\theta\alpha=\beta\,\mathrm{th}\,(\#,\mu+1@1,\nu@0)-P,\quad\alpha=\beta\,\mathrm{th}\,(\#,\mu@1,\nu@0)-P
+\end{aligned}
 $$
-$$
-isProjection(\alpha,X)\iff ... %未完待续
-$$
+
+<!-- 未完待续 -->
